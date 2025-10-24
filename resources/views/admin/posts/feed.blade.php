@@ -121,9 +121,9 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                             <div class="flex space-x-4">
-                                <span class="text-gray-500 dark:text-gray-400">👍 {{ $post->votes()->where('type', 'up')->count() }}</span>
+                                <span class="text-gray-500 dark:text-gray-400">👍 {{ $post->votes()->where('vote_type', 'up')->count() }}</span>
                                 <span class="text-gray-500 dark:text-gray-400">💬 {{ $post->comments()->count() }}</span>
-                                <span class="text-gray-500 dark:text-gray-400">🔄 {{ $post->votes()->where('type', 'down')->count() }}</span>
+                                <span class="text-gray-500 dark:text-gray-400">🔄 {{ $post->votes()->where('vote_type', 'down')->count() }}</span>
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
