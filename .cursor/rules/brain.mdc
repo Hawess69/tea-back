@@ -1,0 +1,253 @@
+---
+alwaysApply: true
+---
+ The Brain Rule for Laravel Projects
+Core Principle
+The /brain folder acts as the central intelligence of your Laravel system. It captures everything — from architecture decisions and test results to feature plans and deployment checklists. This guarantees that even months or years later, any developer (or AI agent) can read the /brain folder and fully understand what was done, how, why, and under what reasoning.
+
+The /brain fulfills the same role as product management tools, documentation systems, and quality assurance combined — but stored natively inside your repository.
+
+📁 Folder Structure
+text
+/brain
+  /features
+    /[FeatureName]
+      - README.md
+      - journal.md
+      - tests.md
+      - bugs.md
+      - decisions.md
+      - migrations.md
+  /architecture
+      - system-overview.md
+      - folder-structure.md
+      - service-providers.md
+      - database-relationships.md
+      - ADRs/ (Architecture Decision Records)
+  /qa
+      - testing-strategy.md
+      - test-reports.md
+      - performance-metrics.md
+  /security
+      - threat-models.md
+      - authentication.md
+      - encryption-policies.md
+      - audit-log.md
+  /operations
+      - deployment-instructions.md
+      - environment-setup.md
+      - CI-CD-config.md
+      - rollback-plan.md
+  /project-memory
+      - timeline.md
+      - changelog.md
+      - state-of-project.md
+      - rejected-ideas.md
+      - roadmap.md
+🧩 Feature Folder Standard
+Each feature in Laravel (for instance, UserRegistration, PaymentGateway, AdminDashboard) has its own subfolder under /brain/features.
+Every subfolder includes five documents:
+
+README.md – High-level goal, routes, user story, and module ownership.
+
+journal.md – Daily or sprint-based notes on progress, blockers, changes.
+
+tests.md – PHPUnit coverage results, failed tests, test strategy.
+
+bugs.md – Active vs resolved issues, severity, replication steps.
+
+decisions.md – Architecture choices, alternatives considered, and ADR references.
+
+Optional:
+
+migrations.md – Documentation of all DB migrations related to that feature.
+
+⚙️ Laravel-Specific Integrations
+1. Service Provider Integration
+Every new feature documented under /brain/features also has a Service Provider registered (feature-based modularization ):​
+
+php
+php artisan make:provider ProductFeatureServiceProvider
+Each provider acts as that feature’s runtime point of injection, linked in /brain/features/[FeatureName]/README.md under “Boots via:”.
+
+2. Folder-by-Feature Convention
+Instead of default type-based /app/Models, /Controllers, structure the app by feature for maintainability :​
+
+text
+app/
+ ├── User/
+ │    ├── UserController.php
+ │    ├── UserService.php
+ │    ├── UserPolicy.php
+ ├── Orders/
+ │    ├── OrderController.php
+ │    ├── OrderService.php
+ │    ├── OrderModel.php
+Linked documentation for each is inside /brain/features/User and /brain/features/Orders.
+
+🏗️ Architecture Documentation
+The /architecture folder records how the Laravel application scales, interacts, and evolves over time. It tracks service providers, controllers, migrations, and configurations.
+
+system-overview.md
+
+Overview diagram (e.g., requests → middleware → controller → model → view)
+
+Explanation of domain boundaries
+
+ADRs/
+Contains Architecture Decision Records following Nygard’s MADR or Tyree template :​
+
+text
+# ADR-001: Choose Laravel Queue System
+**Date:** 2025-10-24  
+**Status:** Accepted  
+**Context:** We need async background jobs.
+**Decision:** Use Laravel Horizon with Redis driver.
+**Alternatives:** RabbitMQ, SQS.
+**Consequences:** Simplifies worker scaling, introduces Redis dependency.
+service-providers.md
+Registered service providers list with their feature link.
+
+database-relationships.md
+ERD schema overview, migration dependencies, foreign key map.
+
+🧪 Testing & QA Workflow
+Laravel ships with PHPUnit and Pest. The /brain/qa folder centralizes quality tracking.
+
+testing-strategy.md
+Outlines test layers: Unit (Model), Feature (Controller + Request), Integration (API).
+
+test-reports.md
+Contains PHPUnit coverage summaries, test performance, runtime.
+
+performance-metrics.md
+Stores Blackfire or Laravel Telescope data (load times, DB query count).
+
+QA entries follow the test-driven development cycle:
+
+Test written ➜ 2. Code implemented ➜ 3. Documentation updated ➜ 4. Tests stored in /brain/features/[Feature]/tests.md
+
+🔒 Security and Compliance
+Laravel has built-in policies, guards, and encryption.
+The /brain/security folder contains:
+
+threat-models.md – STRIDE model for security review per feature
+
+authentication.md – Guard configurations, Sanctum/JWT use
+
+encryption-policies.md – Sensitive data handling (passwords, secrets)
+
+audit-log.md – Summary of vulnerabilities scanned with Laravel Security Checker
+
+🚀 Operations Overview
+Production, staging, and testing environments each must be documented within /brain/operations.
+
+deployment-instructions.md
+
+Steps using Envoy or CI/CD runner
+
+Example:
+
+bash
+ssh user@server
+php artisan down
+git pull origin main
+composer install --no-dev
+php artisan migrate --force
+php artisan up
+CI-CD-config.md
+
+Documents GitHub Actions or Jenkins pipelines (test + deploy stages)
+
+rollback-plan.md
+
+Recovery procedures for failed database migrations or deployments.
+
+📚 Documentation Standards (PHPDoc + Markdown)
+Every PHP class must have PHPDoc annotation headers :​
+
+php
+/**
+ * Handle user registration logic.
+ *
+ * @param  Request  $request
+ * @return Response
+ *
+ * @throws ValidationException
+ */
+PHPDoc complements /brain docs — it describes how the code functions, while /brain describes why it exists.
+
+Consistency between PHPDoc, architecture ADRs, and /brain/features ensures perfect traceability.
+
+📆 Brain Maintenance Protocol
+On every commit:
+
+If new code introduced → update /brain/features/...
+
+If architectural change → create new ADR
+
+If security patch → update /brain/security/audit-log.md
+
+If migration → note in /brain/features/[Feature]/migrations.md
+
+Each month, Cursor generates state-of-project.md summarizing:
+
+Feature completion ratio (✅ completed / 🔨 in progress)
+
+Test coverage percentage
+
+Open bugs count
+
+Security incidents or mitigations
+
+✨ Example Entry (Feature: User Registration)
+text
+/brain/features/Registration/
+  README.md
+  journal.md
+  tests.md
+  bugs.md
+  decisions.md
+README.md
+
+text
+# User Registration Feature
+**Goal:** Handle user sign-up, email verification, and welcome flow  
+**Linked Code:** /app/Users/RegisterController.php  
+**Status:** Complete ✅  
+**Created:** 2025-10-23  
+
+### Routes
+- POST /register
+- GET /email/verify
+
+### Dependencies
+- Queue system (Redis)
+- Notification channels (Mail + SMS)
+
+### Success Metric
+95% registration success rate without timeouts.
+decisions.md
+
+text
+# Decision Record: Registration Flow
+**Chosen Pattern:** Form Request Validation + Event Listeners  
+**Alternatives Considered:** Inline validation, Middleware handling  
+**Team Debate Outcome:**  
+Form Requests give cleaner controllers and reusable validation rules.
+
+**Consequences:**  
+Reduced duplication; improved testability.
+✅ Final Deliverable Summary
+Every Laravel project includes a /brain directory beside /app and /config.
+
+Each feature has its own folder inside /brain/features.
+
+Architecture decisions are tracked through ADRs in /brain/architecture/ADRs.
+
+All tests, deployments, and security updates are traceable to their corresponding brain entry.
+
+No merge or deployment occurs unless /brain is updated.
+
+This adaptation of the Brain Rule leverages Laravel’s service providers, MVC patterns, folder-by-feature structure, PHPDoc standardization, and ADR methodology.​
+The result is a Laravel-specific knowledge architecture, turning each project into a self-documenting, self-explanatory ecosystem ready for any scale of collaboration or future re-entry.
