@@ -20,27 +20,31 @@
         </div>
 
         <!-- Search and Filters -->
-        <div class="mb-6">
+        <form method="GET" class="mb-6">
             <div class="flex flex-col sm:flex-row gap-4">
                 <div class="flex-1">
                     <input type="text" 
+                           name="search"
+                           value="{{ request('search') }}"
                            placeholder="Search posts..." 
                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white">
                 </div>
-                <select class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white">
-                    <option>All Status</option>
-                    <option>Published</option>
-                    <option>Draft</option>
-                    <option>Hidden</option>
+                <select name="status" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white">
+                    <option value="">All Status</option>
+                    <option value="published" {{ request('status') === 'published' ? 'selected' : '' }}>Published</option>
+                    <option value="draft" {{ request('status') === 'draft' ? 'selected' : '' }}>Draft</option>
+                    <option value="hidden" {{ request('status') === 'hidden' ? 'selected' : '' }}>Hidden</option>
                 </select>
-                <select class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white">
-                    <option>All Types</option>
-                    <option>Text</option>
-                    <option>Image</option>
-                    <option>Video</option>
+                <select name="type" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white">
+                    <option value="">All Types</option>
+                    <option value="with_image" {{ request('type') === 'with_image' ? 'selected' : '' }}>With Image</option>
+                    <option value="text_only" {{ request('type') === 'text_only' ? 'selected' : '' }}>Text Only</option>
                 </select>
+                <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    Filter
+                </button>
             </div>
-        </div>
+        </form>
 
         <!-- Posts Table -->
         <div class="overflow-x-auto">

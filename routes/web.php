@@ -38,9 +38,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         return redirect()->route('admin.dashboard');
     });
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/users', function () { return view('admin.users.index'); })->name('users.index');
-    Route::get('/posts/feed', function () { return view('admin.posts.feed'); })->name('posts.feed');
-    Route::get('/posts/men', function () { return view('admin.posts.men'); })->name('posts.men');
+    
+    // User management
+    Route::resource('users', App\Http\Controllers\Admin\UserController::class);
+    
+    // Posts management
+    Route::resource('posts.feed', App\Http\Controllers\Admin\FeedPostController::class);
+    Route::resource('posts.men', App\Http\Controllers\Admin\MenPostController::class);
+    
     Route::get('/analytics', function () { return view('admin.analytics'); })->name('analytics');
 });
 
