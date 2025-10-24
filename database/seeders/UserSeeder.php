@@ -14,6 +14,15 @@ class UserSeeder extends Seeder
     {
         $users = [
             [
+                'name' => 'Aziz Admin',
+                'email' => 'aziz@aziz.com',
+                'phone' => '+1234567890',
+                'password' => bcrypt('19112002'),
+                'role' => 'admin',
+                'status' => 'active',
+                'avatar' => 'https://via.placeholder.com/150/0000FF/FFFFFF?text=A',
+            ],
+            [
                 'name' => 'Admin User',
                 'email' => 'admin@tea.com',
                 'phone' => '+1234567890',
