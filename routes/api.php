@@ -62,10 +62,10 @@ Route::prefix('v1')->group(function () {
         Route::middleware('admin')->prefix('admin')->group(function () {
             Route::post('users/{id}/ban', [App\Http\Controllers\Admin\UserController::class, 'ban']);
             Route::post('users/{id}/role', [App\Http\Controllers\Admin\UserController::class, 'changeRole']);
-            Route::post('posts/feed/{id}/hide', [App\Http\Controllers\Admin\FeedPostController::class, 'hide']);
-            Route::post('posts/feed/{id}/publish', [App\Http\Controllers\Admin\FeedPostController::class, 'publish']);
-            Route::post('posts/men/{id}/hide', [App\Http\Controllers\Admin\MenPostController::class, 'hide']);
-            Route::post('posts/men/{id}/publish', [App\Http\Controllers\Admin\MenPostController::class, 'publish']);
+            Route::post('feed-posts/{id}/hide', [App\Http\Controllers\Admin\FeedPostController::class, 'hide']);
+            Route::post('feed-posts/{id}/publish', [App\Http\Controllers\Admin\FeedPostController::class, 'publish']);
+            Route::post('men-posts/{id}/hide', [App\Http\Controllers\Admin\MenPostController::class, 'hide']);
+            Route::post('men-posts/{id}/publish', [App\Http\Controllers\Admin\MenPostController::class, 'publish']);
         });
     });
 });

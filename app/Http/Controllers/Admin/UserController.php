@@ -18,12 +18,7 @@ final class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(function ($request, $next) {
-            if (auth()->user()?->role !== 'admin') {
-                abort(403);
-            }
-            return $next($request);
-        });
+        // Admin middleware is already applied in routes
     }
 
     /**

@@ -72,190 +72,92 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    <!-- Sample Post Rows -->
+                    @forelse($posts as $post)
                     <tr>
                         <td class="px-6 py-4">
                             <div class="flex items-start space-x-3">
                                 <div class="flex-shrink-0">
-                                    <img class="h-12 w-12 rounded-lg object-cover" src="https://via.placeholder.com/150" alt="Post image">
+                                    @if($post->image_url)
+                                        <img class="h-12 w-12 rounded-lg object-cover" src="{{ $post->image_url }}" alt="Post image">
+                                    @else
+                                        <div class="h-12 w-12 bg-gray-200 dark:bg-gray-600 rounded-lg flex items-center justify-center">
+                                            <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                            </svg>
+                                        </div>
+                                    @endif
                                 </div>
                                 <div class="min-w-0 flex-1">
                                     <p class="text-sm font-medium text-gray-900 dark:text-white">
-                                        Just had an amazing day at the beach! 🏖️
+                                        {{ $post->title }}
                                     </p>
                                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                        The weather was perfect and the waves were incredible...
+                                        {{ \Str::limit($post->body, 100) }}
                                     </p>
                                 </div>
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center">
-                                <div class="h-8 w-8 rounded-full bg-indigo-500 flex items-center justify-center">
-                                    <span class="text-xs font-medium text-white">JD</span>
-                                </div>
-                                <div class="ml-3">
-                                    <div class="text-sm font-medium text-gray-900 dark:text-white">John Doe</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                                Published
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                            <div class="flex space-x-4">
-                                <span class="text-gray-500 dark:text-gray-400">👍 24</span>
-                                <span class="text-gray-500 dark:text-gray-400">💬 8</span>
-                                <span class="text-gray-500 dark:text-gray-400">🔄 3</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                            2 hours ago
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <div class="flex space-x-2">
-                                <button class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400">View</button>
-                                <button class="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400">Edit</button>
-                                <button class="text-red-600 hover:text-red-900 dark:text-red-400">Hide</button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td class="px-6 py-4">
-                            <div class="flex items-start space-x-3">
-                                <div class="flex-shrink-0">
-                                    <div class="h-12 w-12 bg-gray-200 dark:bg-gray-600 rounded-lg flex items-center justify-center">
-                                        <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                        </svg>
+                                @if($post->user->avatar)
+                                    <img class="h-8 w-8 rounded-full object-cover" src="{{ $post->user->avatar }}" alt="{{ $post->user->name }}">
+                                @else
+                                    <div class="h-8 w-8 rounded-full bg-indigo-500 flex items-center justify-center">
+                                        <span class="text-xs font-medium text-white">{{ substr($post->user->name, 0, 2) }}</span>
                                     </div>
-                                </div>
-                                <div class="min-w-0 flex-1">
-                                    <p class="text-sm font-medium text-gray-900 dark:text-white">
-                                        Check out this amazing sunset! 🌅
-                                    </p>
-                                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                        Nature never fails to amaze me...
-                                    </p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center">
-                                <div class="h-8 w-8 rounded-full bg-purple-500 flex items-center justify-center">
-                                    <span class="text-xs font-medium text-white">JS</span>
-                                </div>
+                                @endif
                                 <div class="ml-3">
-                                    <div class="text-sm font-medium text-gray-900 dark:text-white">Jane Smith</div>
+                                    <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $post->user->name }}</div>
                                 </div>
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                                Published
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
+                                {{ $post->status === 'published' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 
+                                   ($post->status === 'draft' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' : 
+                                   'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200') }}">
+                                {{ ucfirst($post->status) }}
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                             <div class="flex space-x-4">
-                                <span class="text-gray-500 dark:text-gray-400">👍 45</span>
-                                <span class="text-gray-500 dark:text-gray-400">💬 12</span>
-                                <span class="text-gray-500 dark:text-gray-400">🔄 7</span>
+                                <span class="text-gray-500 dark:text-gray-400">👍 {{ $post->votes()->where('type', 'up')->count() }}</span>
+                                <span class="text-gray-500 dark:text-gray-400">💬 {{ $post->comments()->count() }}</span>
+                                <span class="text-gray-500 dark:text-gray-400">🔄 {{ $post->votes()->where('type', 'down')->count() }}</span>
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                            5 hours ago
+                            {{ $post->created_at->diffForHumans() }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex space-x-2">
-                                <button class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400">View</button>
-                                <button class="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400">Edit</button>
-                                <button class="text-red-600 hover:text-red-900 dark:text-red-400">Hide</button>
+                                <a href="{{ route('admin.feed-posts.show', $post) }}" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400">View</a>
+                                <a href="{{ route('admin.feed-posts.edit', $post) }}" class="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400">Edit</a>
+                                @if($post->status === 'published')
+                                    <button onclick="toggleHide({{ $post->id }}, 'feed', '{{ $post->status }}')" class="text-red-600 hover:text-red-900 dark:text-red-400">Hide</button>
+                                @elseif($post->status === 'hidden')
+                                    <button onclick="toggleHide({{ $post->id }}, 'feed', '{{ $post->status }}')" class="text-green-600 hover:text-green-900 dark:text-green-400">Unhide</button>
+                                @elseif($post->status === 'draft')
+                                    <button onclick="publishPost({{ $post->id }}, 'feed')" class="text-green-600 hover:text-green-900 dark:text-green-400">Publish</button>
+                                @endif
+                                <button onclick="confirmDelete({{ $post->id }}, 'post')" class="text-red-600 hover:text-red-900 dark:text-red-400">Delete</button>
                             </div>
                         </td>
                     </tr>
-
+                    @empty
                     <tr>
-                        <td class="px-6 py-4">
-                            <div class="flex items-start space-x-3">
-                                <div class="flex-shrink-0">
-                                    <div class="h-12 w-12 bg-gray-200 dark:bg-gray-600 rounded-lg flex items-center justify-center">
-                                        <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div class="min-w-0 flex-1">
-                                    <p class="text-sm font-medium text-gray-900 dark:text-white">
-                                        New video tutorial is up! 🎥
-                                    </p>
-                                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                        Learn how to create amazing content...
-                                    </p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center">
-                                <div class="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center">
-                                    <span class="text-xs font-medium text-white">BJ</span>
-                                </div>
-                                <div class="ml-3">
-                                    <div class="text-sm font-medium text-gray-900 dark:text-white">Bob Johnson</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
-                                Draft
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                            <div class="flex space-x-4">
-                                <span class="text-gray-500 dark:text-gray-400">👍 0</span>
-                                <span class="text-gray-500 dark:text-gray-400">💬 0</span>
-                                <span class="text-gray-500 dark:text-gray-400">🔄 0</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                            1 day ago
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <div class="flex space-x-2">
-                                <button class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400">View</button>
-                                <button class="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400">Edit</button>
-                                <button class="text-green-600 hover:text-green-900 dark:text-green-400">Publish</button>
-                            </div>
+                        <td colspan="6" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                            No posts found.
                         </td>
                     </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
 
         <!-- Pagination -->
-        <div class="mt-6 flex items-center justify-between">
-            <div class="text-sm text-gray-700 dark:text-gray-300">
-                Showing <span class="font-medium">1</span> to <span class="font-medium">10</span> of <span class="font-medium">156</span> results
-            </div>
-            <div class="flex space-x-2">
-                <button class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300">
-                    Previous
-                </button>
-                <button class="px-3 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700">
-                    1
-                </button>
-                <button class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300">
-                    2
-                </button>
-                <button class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300">
-                    3
-                </button>
-                <button class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300">
-                    Next
-                </button>
-            </div>
+        <div class="mt-6">
+            {{ $posts->links() }}
         </div>
     </div>
 </div>

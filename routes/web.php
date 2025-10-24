@@ -14,6 +14,8 @@ Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
 
+Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
+
 Route::get('/register', function () {
     return view('auth.register');
 })->name('register');
@@ -28,12 +30,10 @@ Route::get('/profile', function () {
 })->name('profile');
 
 // Logout Route
-Route::post('/logout', function () {
-    return redirect('/');
-})->name('logout');
+Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
-// Admin Routes
-Route::prefix('admin')->name('admin.')->group(function () {
+// Admin Routes - Protected by authentication
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/', function () {
         return redirect()->route('admin.dashboard');
     });
@@ -43,8 +43,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('users', App\Http\Controllers\Admin\UserController::class);
     
     // Posts management
-    Route::resource('posts.feed', App\Http\Controllers\Admin\FeedPostController::class);
-    Route::resource('posts.men', App\Http\Controllers\Admin\MenPostController::class);
+    Route::resource('feed-posts', App\Http\Controllers\Admin\FeedPostController::class);
+    Route::resource('men-posts', App\Http\Controllers\Admin\MenPostController::class);
     
     Route::get('/analytics', function () { return view('admin.analytics'); })->name('analytics');
 });

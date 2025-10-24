@@ -66,7 +66,7 @@ document.addEventListener('alpine:init', () => {
             this.loading = true;
             
             try {
-                const response = await fetch(`/api/v1/admin/posts/${postType}/${postId}/hide`, {
+                const response = await fetch(`/api/v1/admin/${postType}-posts/${postId}/hide`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ document.addEventListener('alpine:init', () => {
             this.loading = true;
             
             try {
-                const response = await fetch(`/api/v1/admin/posts/${postType}/${postId}/publish`, {
+                const response = await fetch(`/api/v1/admin/${postType}-posts/${postId}/publish`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

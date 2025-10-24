@@ -53,7 +53,7 @@
         </div>
         <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
             <div class="text-sm">
-                <a href="{{ route('admin.posts.feed') }}" class="font-medium text-green-600 hover:text-green-500 dark:text-green-400">View all posts</a>
+                <a href="{{ route('admin.feed-posts.index') }}" class="font-medium text-green-600 hover:text-green-500 dark:text-green-400">View all posts</a>
             </div>
         </div>
     </div>
@@ -79,7 +79,7 @@
         </div>
         <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
             <div class="text-sm">
-                <a href="{{ route('admin.posts.men') }}" class="font-medium text-yellow-600 hover:text-yellow-500 dark:text-yellow-400">View all posts</a>
+                <a href="{{ route('admin.men-posts.index') }}" class="font-medium text-yellow-600 hover:text-yellow-500 dark:text-yellow-400">View all posts</a>
             </div>
         </div>
     </div>
@@ -105,7 +105,7 @@
         </div>
         <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
             <div class="text-sm">
-                <a href="{{ route('admin.posts.men') }}" class="font-medium text-red-600 hover:text-red-500 dark:text-red-400">Review flags</a>
+                <a href="{{ route('admin.men-posts.index') }}" class="font-medium text-red-600 hover:text-red-500 dark:text-red-400">Review flags</a>
             </div>
         </div>
     </div>
