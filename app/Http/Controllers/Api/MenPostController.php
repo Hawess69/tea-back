@@ -86,6 +86,9 @@ final class MenPostController extends Controller
                         'message' => 'Invalid image file',
                     ], 422);
                 }
+            } else {
+                // Set photo_url to null if no image provided
+                $data['photo_url'] = null;
             }
 
             $post = $this->menPostService->createPost($request->user(), $data);

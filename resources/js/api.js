@@ -225,5 +225,23 @@ export const eventAPI = {
     }
 };
 
+// Comments API methods
+export const commentAPI = {
+    async getComment(id) {
+        const api = new ApiClient();
+        return api.get(`/comments/${id}`);
+    },
+
+    async updateComment(id, data) {
+        const api = new ApiClient();
+        return api.put(`/comments/${id}`, data);
+    },
+
+    async deleteComment(id) {
+        const api = new ApiClient();
+        return api.delete(`/comments/${id}`);
+    }
+};
+
 // Create global API instance
 window.api = new ApiClient();

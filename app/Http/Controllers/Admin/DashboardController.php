@@ -26,7 +26,7 @@ final class DashboardController extends Controller
         $recentUsers = User::latest()->take(3)->get();
         $recentFeedPosts = FeedPost::with('user')->latest()->take(3)->get();
         $recentMenPosts = MenPost::with('user')->latest()->take(3)->get();
-        $recentFlags = Flag::with('menPost')->latest()->take(3)->get();
+        $recentFlags = Flag::with('flagable')->latest()->take(3)->get();
 
         // Build recent activity array
         $recentActivity = collect();
@@ -63,9 +63,10 @@ final class DashboardController extends Controller
         
         // Add recent flags
         foreach ($recentFlags as $flag) {
+            $postType = $flag->flagable_type === MenPost::class ? 'Men post' : 'Feed post';
             $recentActivity->push([
                 'type' => 'flag',
-                'description' => "Men post flagged for review",
+                'description' => "{$postType} flagged for review",
                 'time' => $flag->created_at->diffForHumans(),
                 'flag' => $flag
             ]);

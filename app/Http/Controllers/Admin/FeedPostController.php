@@ -78,7 +78,7 @@ final class FeedPostController extends Controller
     {
         $feedPost->update($request->validated());
 
-        return redirect()->route('admin.posts.feed.index')
+        return redirect()->route('admin.feed-posts.index')
             ->with('success', 'Feed post updated successfully.');
     }
 
@@ -89,7 +89,7 @@ final class FeedPostController extends Controller
     {
         $feedPost->delete();
 
-        return redirect()->route('admin.posts.feed.index')
+        return redirect()->route('admin.feed-posts.index')
             ->with('success', 'Feed post deleted successfully.');
     }
 

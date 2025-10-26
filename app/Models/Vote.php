@@ -4,21 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Vote extends Model
 {
     protected $fillable = [
-        'post_id',
+        'voteable_id',
+        'voteable_type',
         'user_id',
         'vote_type',
     ];
 
     /**
-     * Get the feed post that owns the vote.
+     * Get the voteable model (feed post or men post).
      */
-    public function feedPost(): BelongsTo
+    public function voteable(): MorphTo
     {
-        return $this->belongsTo(FeedPost::class, 'post_id');
+        return $this->morphTo();
     }
 
     /**

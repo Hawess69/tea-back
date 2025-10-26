@@ -47,6 +47,11 @@ Route::prefix('v1')->group(function () {
         Route::get('/men/posts/{id}/comments', [MenPostController::class, 'comments']);
         Route::post('/men/posts/{id}/comments', [MenPostController::class, 'addComment']);
         
+        // Comments CRUD
+        Route::get('/comments/{id}', [CommentController::class, 'show']);
+        Route::put('/comments/{id}', [CommentController::class, 'update']);
+        Route::delete('/comments/{id}', [CommentController::class, 'destroy']);
+        
         // Alerts
         Route::get('/alerts', [AlertController::class, 'index']);
         Route::post('/alerts', [AlertController::class, 'store']);

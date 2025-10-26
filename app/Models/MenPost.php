@@ -25,6 +25,22 @@ class MenPost extends Model
     ];
 
     /**
+     * Set the tags attribute.
+     */
+    public function setTagsAttribute($value): void
+    {
+        if (is_null($value)) {
+            $this->attributes['tags'] = json_encode([]);
+        } elseif (is_string($value)) {
+            $tags = array_map('trim', explode(',', $value));
+            $tags = array_filter($tags); // Remove empty values
+            $this->attributes['tags'] = json_encode($tags);
+        } else {
+            $this->attributes['tags'] = json_encode($value);
+        }
+    }
+
+    /**
      * Get the user that owns the men post.
      */
     public function user(): BelongsTo
@@ -35,9 +51,9 @@ class MenPost extends Model
     /**
      * Get the flags for the men post.
      */
-    public function flags(): HasMany
+    public function flags(): MorphMany
     {
-        return $this->hasMany(Flag::class, 'post_id');
+        return $this->morphMany(Flag::class, 'flagable');
     }
 
     /**
@@ -50,11 +66,10 @@ class MenPost extends Model
 
     /**
      * Get the votes for the men post.
-     * Note: Men posts don't have votes in the current system.
      */
-    public function votes(): HasMany
+    public function votes(): MorphMany
     {
-        return $this->hasMany(Vote::class, 'post_id')->whereRaw('1 = 0'); // Empty relationship
+        return $this->morphMany(Vote::class, 'voteable');
     }
 
     /**
@@ -62,7 +77,7 @@ class MenPost extends Model
      */
     public function getUpvotesCountAttribute(): int
     {
-        return 0; // Men posts don't have votes
+        return $this->votes()->where('vote_type', 'up')->count();
     }
 
     /**
@@ -70,6 +85,6 @@ class MenPost extends Model
      */
     public function getDownvotesCountAttribute(): int
     {
-        return 0; // Men posts don't have votes
+        return $this->votes()->where('vote_type', 'down')->count();
     }
 }

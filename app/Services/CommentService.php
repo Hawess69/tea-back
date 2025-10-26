@@ -45,12 +45,10 @@ final class CommentService
      */
     public function addComment(User $user, Model $post, string $body): Comment
     {
-        $postType = $this->getPostType($post);
-        
         $comment = Comment::create([
             'user_id' => $user->id,
-            'post_id' => $post->id,
-            'post_type' => $postType,
+            'commentable_id' => $post->id,
+            'commentable_type' => get_class($post),
             'body' => $body,
         ]);
 
@@ -67,8 +65,8 @@ final class CommentService
      */
     public function updateComment(User $user, Comment $comment, string $body): Comment
     {
-        // Check if user owns the comment
-        if ($comment->user_id !== $user->id) {
+        // Check if user owns the comment or is admin
+        if ($comment->user_id !== $user->id && $user->role !== 'admin') {
             throw new \Exception('Unauthorized to update this comment');
         }
 

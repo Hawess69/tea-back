@@ -53,3 +53,5 @@ final class AdminUserSeeder extends Seeder
         $this->command->info('Moderator: moderator@tea.com / password123');
     }
 }
+
+

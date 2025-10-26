@@ -32,6 +32,11 @@ Route::get('/profile', function () {
 // Logout Route
 Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
+// Logout GET fallback - redirect to login with message
+Route::get('/logout', function () {
+    return redirect()->route('login')->with('message', 'Please use the logout button to sign out properly.');
+});
+
 // Admin Routes - Protected by authentication
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/', function () {
@@ -41,12 +46,22 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     
     // User management
     Route::resource('users', App\Http\Controllers\Admin\UserController::class);
+    Route::post('/users/{user}/ban', [App\Http\Controllers\Admin\UserController::class, 'ban'])->name('users.ban');
+    Route::post('/users/{user}/role', [App\Http\Controllers\Admin\UserController::class, 'changeRole'])->name('users.role');
     
     // Posts management
     Route::resource('feed-posts', App\Http\Controllers\Admin\FeedPostController::class);
     Route::resource('men-posts', App\Http\Controllers\Admin\MenPostController::class);
+    Route::post('/feed-posts/{feedPost}/hide', [App\Http\Controllers\Admin\FeedPostController::class, 'hide'])->name('feed-posts.hide');
+    Route::post('/feed-posts/{feedPost}/publish', [App\Http\Controllers\Admin\FeedPostController::class, 'publish'])->name('feed-posts.publish');
+    Route::post('/men-posts/{menPost}/hide', [App\Http\Controllers\Admin\MenPostController::class, 'hide'])->name('men-posts.hide');
+    Route::post('/men-posts/{menPost}/publish', [App\Http\Controllers\Admin\MenPostController::class, 'publish'])->name('men-posts.publish');
     
-    Route::get('/analytics', function () { return view('admin.analytics'); })->name('analytics');
+    Route::get('/analytics', [App\Http\Controllers\Admin\AnalyticsController::class, 'index'])->name('analytics');
+    
+    // Comment management routes
+    Route::put('/comments/{id}', [App\Http\Controllers\Admin\CommentController::class, 'update'])->name('comments.update');
+    Route::delete('/comments/{id}', [App\Http\Controllers\Admin\CommentController::class, 'destroy'])->name('comments.destroy');
 });
 
 // Simple Admin Dashboard (Temporary - JSON API)

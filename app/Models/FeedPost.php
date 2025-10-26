@@ -36,9 +36,9 @@ class FeedPost extends Model
     /**
      * Get the votes for the feed post.
      */
-    public function votes(): HasMany
+    public function votes(): MorphMany
     {
-        return $this->hasMany(Vote::class, 'post_id');
+        return $this->morphMany(Vote::class, 'voteable');
     }
 
     /**
@@ -47,5 +47,21 @@ class FeedPost extends Model
     public function comments(): MorphMany
     {
         return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    /**
+     * Get the upvotes count attribute.
+     */
+    public function getUpvotesCountAttribute(): int
+    {
+        return $this->votes()->where('vote_type', 'up')->count();
+    }
+
+    /**
+     * Get the downvotes count attribute.
+     */
+    public function getDownvotesCountAttribute(): int
+    {
+        return $this->votes()->where('vote_type', 'down')->count();
     }
 }

@@ -115,8 +115,8 @@ final class FeedPostService
     {
         // Check if user already voted
         $existingVote = Vote::where('user_id', $user->id)
-            ->where('post_id', $post->id)
-            ->where('post_type', 'feed')
+            ->where('voteable_id', $post->id)
+            ->where('voteable_type', FeedPost::class)
             ->first();
 
         DB::transaction(function () use ($user, $post, $voteType, $existingVote) {
@@ -138,8 +138,8 @@ final class FeedPostService
                 // Create new vote
                 Vote::create([
                     'user_id' => $user->id,
-                    'post_id' => $post->id,
-                    'post_type' => 'feed',
+                    'voteable_id' => $post->id,
+                    'voteable_type' => FeedPost::class,
                     'vote_type' => $voteType,
                 ]);
 
@@ -189,8 +189,8 @@ final class FeedPostService
     {
         $comment = Comment::create([
             'user_id' => $user->id,
-            'post_id' => $post->id,
-            'post_type' => 'feed',
+            'commentable_id' => $post->id,
+            'commentable_type' => FeedPost::class,
             'body' => $body,
         ]);
 

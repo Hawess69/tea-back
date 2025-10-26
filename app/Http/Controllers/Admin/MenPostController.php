@@ -75,7 +75,7 @@ final class MenPostController extends Controller
     {
         $menPost->update($request->validated());
 
-        return redirect()->route('admin.posts.men.index')
+        return redirect()->route('admin.men-posts.index')
             ->with('success', 'Men post updated successfully.');
     }
 
@@ -86,7 +86,7 @@ final class MenPostController extends Controller
     {
         $menPost->delete();
 
-        return redirect()->route('admin.posts.men.index')
+        return redirect()->route('admin.men-posts.index')
             ->with('success', 'Men post deleted successfully.');
     }
 

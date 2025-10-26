@@ -33,6 +33,24 @@ final class UpdateMenPostRequest extends FormRequest
     }
 
     /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        // Convert comma-separated tags string to array
+        if ($this->has('tags') && is_string($this->tags)) {
+            $tags = trim($this->tags);
+            if (empty($tags)) {
+                $this->merge(['tags' => []]);
+            } else {
+                $tagsArray = array_map('trim', explode(',', $tags));
+                $tagsArray = array_filter($tagsArray); // Remove empty values
+                $this->merge(['tags' => $tagsArray]);
+            }
+        }
+    }
+
+    /**
      * Get custom messages for validator errors.
      */
     public function messages(): array
@@ -42,9 +60,7 @@ final class UpdateMenPostRequest extends FormRequest
             'full_name.max' => 'Full name must not exceed 255 characters.',
             'city.required' => 'City is required.',
             'city.max' => 'City must not exceed 100 characters.',
-            'tags.array' => 'Tags must be an array.',
-            'tags.*.string' => 'Each tag must be a string.',
-            'tags.*.max' => 'Each tag must not exceed 50 characters.',
+            'tags.string' => 'Tags must be a string.',
             'caption.required' => 'Caption is required.',
             'photo_url.url' => 'Photo URL must be a valid URL.',
             'status.in' => 'Status must be published, draft, or hidden.',

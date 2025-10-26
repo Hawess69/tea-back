@@ -140,7 +140,7 @@
                                 @elseif($post->status === 'draft')
                                     <button onclick="publishPost({{ $post->id }}, 'feed')" class="text-green-600 hover:text-green-900 dark:text-green-400">Publish</button>
                                 @endif
-                                <button onclick="confirmDelete({{ $post->id }}, 'post')" class="text-red-600 hover:text-red-900 dark:text-red-400">Delete</button>
+                                <button type="button" onclick="confirmDelete({{ $post->id }}, 'post')" class="text-red-600 hover:text-red-900 dark:text-red-400">Delete</button>
                             </div>
                         </td>
                     </tr>

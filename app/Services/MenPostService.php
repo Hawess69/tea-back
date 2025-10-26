@@ -131,8 +131,8 @@ final class MenPostService
     {
         // Check if user already flagged
         $existingFlag = Flag::where('user_id', $user->id)
-            ->where('post_id', $post->id)
-            ->where('post_type', 'men')
+            ->where('flagable_id', $post->id)
+            ->where('flagable_type', MenPost::class)
             ->first();
 
         DB::transaction(function () use ($user, $post, $flagType, $existingFlag) {
@@ -148,8 +148,8 @@ final class MenPostService
                 // Create new flag
                 Flag::create([
                     'user_id' => $user->id,
-                    'post_id' => $post->id,
-                    'post_type' => 'men',
+                    'flagable_id' => $post->id,
+                    'flagable_type' => MenPost::class,
                     'flag_type' => $flagType,
                 ]);
 
@@ -193,8 +193,8 @@ final class MenPostService
     {
         $comment = Comment::create([
             'user_id' => $user->id,
-            'post_id' => $post->id,
-            'post_type' => 'men',
+            'commentable_id' => $post->id,
+            'commentable_type' => MenPost::class,
             'body' => $body,
         ]);
 

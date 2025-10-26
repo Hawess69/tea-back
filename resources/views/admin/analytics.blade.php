@@ -20,8 +20,8 @@
                 </div>
                 <div class="ml-5 w-0 flex-1">
                     <dl>
-                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Views</dt>
-                        <dd class="text-lg font-medium text-gray-900 dark:text-white">2,847</dd>
+                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Users</dt>
+                        <dd class="text-lg font-medium text-gray-900 dark:text-white">{{ number_format($totalUsers) }}</dd>
                     </dl>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                 <div class="ml-5 w-0 flex-1">
                     <dl>
                         <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Active Users</dt>
-                        <dd class="text-lg font-medium text-gray-900 dark:text-white">1,234</dd>
+                        <dd class="text-lg font-medium text-gray-900 dark:text-white">{{ number_format($activeUsers) }}</dd>
                     </dl>
                 </div>
             </div>
@@ -75,7 +75,7 @@
                 <div class="ml-5 w-0 flex-1">
                     <dl>
                         <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Engagement Rate</dt>
-                        <dd class="text-lg font-medium text-gray-900 dark:text-white">68.4%</dd>
+                        <dd class="text-lg font-medium text-gray-900 dark:text-white">{{ $engagementRate }}%</dd>
                     </dl>
                 </div>
             </div>
@@ -119,53 +119,29 @@
         <div class="px-4 py-5 sm:p-6">
             <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">Top Performing Posts</h3>
             <div class="space-y-4">
+                @foreach($topFeedPosts as $index => $post)
                 <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                     <div class="flex items-center space-x-3">
                         <div class="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center">
-                            <span class="text-xs font-medium text-white">1</span>
+                            <span class="text-xs font-medium text-white">{{ $index + 1 }}</span>
                         </div>
                         <div>
-                            <p class="text-sm font-medium text-gray-900 dark:text-white">Morning Routine Tips</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">by John Doe</p>
+                            <p class="text-sm font-medium text-gray-900 dark:text-white">{{ Str::limit($post['title'], 30) }}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">by {{ $post['author'] }}</p>
                         </div>
                     </div>
                     <div class="text-right">
-                        <p class="text-sm font-medium text-gray-900 dark:text-white">2.4k views</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">89% engagement</p>
+                        <p class="text-sm font-medium text-gray-900 dark:text-white">{{ $post['votes'] }} votes</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ $post['comments'] }} comments</p>
                     </div>
                 </div>
-
-                <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
-                            <span class="text-xs font-medium text-white">2</span>
-                        </div>
-                        <div>
-                            <p class="text-sm font-medium text-gray-900 dark:text-white">Fitness Journey</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">by Jane Smith</p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-sm font-medium text-gray-900 dark:text-white">1.8k views</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">76% engagement</p>
-                    </div>
+                @endforeach
+                
+                @if(count($topFeedPosts) == 0)
+                <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+                    <p>No feed posts available</p>
                 </div>
-
-                <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                            <span class="text-xs font-medium text-white">3</span>
-                        </div>
-                        <div>
-                            <p class="text-sm font-medium text-gray-900 dark:text-white">Career Advice</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">by Bob Johnson</p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-sm font-medium text-gray-900 dark:text-white">1.2k views</p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">82% engagement</p>
-                    </div>
-                </div>
+                @endif
             </div>
         </div>
     </div>
@@ -175,43 +151,102 @@
         <div class="px-4 py-5 sm:p-6">
             <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">User Demographics</h3>
             <div class="space-y-4">
+                @php
+                    $totalUsers = array_sum($userDemographics);
+                    $colors = ['bg-indigo-500', 'bg-purple-500', 'bg-green-500', 'bg-yellow-500'];
+                    $ageGroups = ['18-25', '26-35', '36-45', '45+'];
+                @endphp
+                
+                @foreach($userDemographics as $ageGroup => $count)
+                @php
+                    $percentage = $totalUsers > 0 ? round(($count / $totalUsers) * 100) : 0;
+                    $colorIndex = array_search($ageGroup, array_keys($userDemographics));
+                @endphp
                 <div class="flex items-center justify-between">
-                    <span class="text-sm text-gray-600 dark:text-gray-400">Age 18-25</span>
+                    <span class="text-sm text-gray-600 dark:text-gray-400">Age {{ $ageGroup }}</span>
                     <div class="flex items-center space-x-2">
                         <div class="w-32 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                            <div class="bg-indigo-500 h-2 rounded-full" style="width: 45%"></div>
+                            <div class="{{ $colors[$colorIndex] }} h-2 rounded-full" style="width: {{ $percentage }}%"></div>
                         </div>
-                        <span class="text-sm font-medium text-gray-900 dark:text-white">45%</span>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $percentage }}%</span>
                     </div>
                 </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+</div>
 
-                <div class="flex items-center justify-between">
-                    <span class="text-sm text-gray-600 dark:text-gray-400">Age 26-35</span>
-                    <div class="flex items-center space-x-2">
-                        <div class="w-32 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                            <div class="bg-purple-500 h-2 rounded-full" style="width: 35%"></div>
-                        </div>
-                        <span class="text-sm font-medium text-gray-900 dark:text-white">35%</span>
+<!-- Recent Activity Trends -->
+<div class="bg-white dark:bg-gray-800 shadow rounded-lg mb-8">
+    <div class="px-4 py-5 sm:p-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">Recent Activity Trends</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Last 24 Hours -->
+            <div class="text-center">
+                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Last 24 Hours</h4>
+                <div class="space-y-2">
+                    <div class="flex justify-between">
+                        <span class="text-xs text-gray-600 dark:text-gray-400">Users:</span>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $recentActivity['last_24h']['users'] }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-xs text-gray-600 dark:text-gray-400">Posts:</span>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $recentActivity['last_24h']['posts'] }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-xs text-gray-600 dark:text-gray-400">Comments:</span>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $recentActivity['last_24h']['comments'] }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-xs text-gray-600 dark:text-gray-400">Votes:</span>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $recentActivity['last_24h']['votes'] }}</span>
                     </div>
                 </div>
-
-                <div class="flex items-center justify-between">
-                    <span class="text-sm text-gray-600 dark:text-gray-400">Age 36-45</span>
-                    <div class="flex items-center space-x-2">
-                        <div class="w-32 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                            <div class="bg-green-500 h-2 rounded-full" style="width: 15%"></div>
-                        </div>
-                        <span class="text-sm font-medium text-gray-900 dark:text-white">15%</span>
+            </div>
+            
+            <!-- Last 7 Days -->
+            <div class="text-center">
+                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Last 7 Days</h4>
+                <div class="space-y-2">
+                    <div class="flex justify-between">
+                        <span class="text-xs text-gray-600 dark:text-gray-400">Users:</span>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $recentActivity['last_7_days']['users'] }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-xs text-gray-600 dark:text-gray-400">Posts:</span>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $recentActivity['last_7_days']['posts'] }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-xs text-gray-600 dark:text-gray-400">Comments:</span>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $recentActivity['last_7_days']['comments'] }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-xs text-gray-600 dark:text-gray-400">Votes:</span>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $recentActivity['last_7_days']['votes'] }}</span>
                     </div>
                 </div>
-
-                <div class="flex items-center justify-between">
-                    <span class="text-sm text-gray-600 dark:text-gray-400">Age 45+</span>
-                    <div class="flex items-center space-x-2">
-                        <div class="w-32 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                            <div class="bg-yellow-500 h-2 rounded-full" style="width: 5%"></div>
-                        </div>
-                        <span class="text-sm font-medium text-gray-900 dark:text-white">5%</span>
+            </div>
+            
+            <!-- Last 30 Days -->
+            <div class="text-center">
+                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Last 30 Days</h4>
+                <div class="space-y-2">
+                    <div class="flex justify-between">
+                        <span class="text-xs text-gray-600 dark:text-gray-400">Users:</span>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $recentActivity['last_30_days']['users'] }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-xs text-gray-600 dark:text-gray-400">Posts:</span>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $recentActivity['last_30_days']['posts'] }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-xs text-gray-600 dark:text-gray-400">Comments:</span>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $recentActivity['last_30_days']['comments'] }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-xs text-gray-600 dark:text-gray-400">Votes:</span>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $recentActivity['last_30_days']['votes'] }}</span>
                     </div>
                 </div>
             </div>
@@ -246,16 +281,16 @@ document.addEventListener('DOMContentLoaded', function() {
     new Chart(userGrowthCtx, {
         type: 'line',
         data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            labels: @json($userGrowthData['labels']),
             datasets: [{
                 label: 'New Users',
-                data: [120, 150, 180, 220, 280, 320],
+                data: @json($userGrowthData['newUsers']),
                 borderColor: 'rgb(99, 102, 241)',
                 backgroundColor: 'rgba(99, 102, 241, 0.1)',
                 tension: 0.4
             }, {
                 label: 'Active Users',
-                data: [800, 950, 1100, 1250, 1400, 1600],
+                data: @json($userGrowthData['activeUsers']),
                 borderColor: 'rgb(16, 185, 129)',
                 backgroundColor: 'rgba(16, 185, 129, 0.1)',
                 tension: 0.4
@@ -282,9 +317,14 @@ document.addEventListener('DOMContentLoaded', function() {
     new Chart(contentCtx, {
         type: 'doughnut',
         data: {
-            labels: ['Feed Posts', 'Men Posts', 'Comments', 'Shares'],
+            labels: ['Feed Posts', 'Men Posts', 'Comments', 'Votes'],
             datasets: [{
-                data: [45, 30, 15, 10],
+                data: [
+                    {{ $contentPerformanceData['feedPosts'] }},
+                    {{ $contentPerformanceData['menPosts'] }},
+                    {{ $contentPerformanceData['comments'] }},
+                    {{ $contentPerformanceData['votes'] }}
+                ],
                 backgroundColor: [
                     'rgb(99, 102, 241)',
                     'rgb(16, 185, 129)',

@@ -2,24 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Comment\StoreCommentRequest;
-use App\Http\Resources\CommentResource;
-use App\Services\CommentService;
 use App\Models\Comment;
+use App\Services\CommentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
-/**
- * Comment controller for comment management
- * 
- * Handles comment CRUD operations for both
- * feed posts and men posts.
- * 
- * @package App\Http\Controllers\Api
- */
 final class CommentController extends Controller
 {
     public function __construct(
@@ -27,39 +18,7 @@ final class CommentController extends Controller
     ) {}
 
     /**
-     * Display the specified comment
-     * 
-     * @param int $id
-     * @return JsonResponse
-     */
-    public function show(int $id): JsonResponse
-    {
-        try {
-            $comment = $this->commentService->getComment($id);
-
-            if (!$comment) {
-                return response()->json([
-                    'message' => 'Comment not found',
-                ], 404);
-            }
-
-            return response()->json([
-                'comment' => new CommentResource($comment),
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Failed to retrieve comment',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
-    }
-
-    /**
      * Update the specified comment
-     * 
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
      */
     public function update(Request $request, int $id): JsonResponse
     {
@@ -73,6 +32,7 @@ final class CommentController extends Controller
             if (!$comment) {
                 return response()->json([
                     'message' => 'Comment not found',
+                    'error' => "Comment with ID {$id} does not exist",
                 ], 404);
             }
 
@@ -84,9 +44,23 @@ final class CommentController extends Controller
 
             return response()->json([
                 'message' => 'Comment updated successfully',
-                'comment' => new CommentResource($updatedComment),
+                'comment' => [
+                    'id' => $updatedComment->id,
+                    'body' => $updatedComment->body,
+                    'user' => [
+                        'name' => $updatedComment->user->name,
+                    ],
+                    'created_at' => $updatedComment->created_at->diffForHumans(),
+                ],
             ]);
         } catch (\Exception $e) {
+            \Log::error('Comment update failed', [
+                'comment_id' => $id,
+                'user_id' => $request->user()?->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
             return response()->json([
                 'message' => 'Failed to update comment',
                 'error' => $e->getMessage(),
@@ -96,10 +70,6 @@ final class CommentController extends Controller
 
     /**
      * Remove the specified comment
-     * 
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
      */
     public function destroy(Request $request, int $id): JsonResponse
     {

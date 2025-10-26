@@ -8,6 +8,21 @@
             this.isAuthenticated = window.auth.isLoggedIn();
             this.user = window.auth.getUser();
         }
+    },
+    logout() {
+        // Create a form and submit it for logout
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ route("logout") }}';
+        
+        const tokenField = document.createElement('input');
+        tokenField.type = 'hidden';
+        tokenField.name = '_token';
+        tokenField.value = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        
+        form.appendChild(tokenField);
+        document.body.appendChild(form);
+        form.submit();
     }
 }">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -60,7 +75,7 @@
                                  class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50 border border-gray-200 dark:border-gray-700">
                                 <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Profile</a>
                                 <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Admin</a>
-                                <button @click="window.auth ? window.auth.logout() : window.location.href='/logout'" class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Sign out</button>
+                                <button @click="logout()" class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Sign out</button>
                             </div>
                         </div>
                     </div>
@@ -128,7 +143,7 @@
                         <div class="mt-3 px-2 space-y-1">
                             <a href="{{ route('profile') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Profile</a>
                             <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Admin</a>
-                            <button @click="window.auth ? window.auth.logout() : window.location.href='/logout'" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Sign out</button>
+                            <button @click="logout()" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Sign out</button>
                         </div>
                     </div>
                 </template>

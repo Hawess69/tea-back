@@ -24,14 +24,14 @@
         // Admin Alpine.js Components
         document.addEventListener('alpine:init', () => {
             // Admin Actions Component
-            Alpine.data('adminActions', () => ({
+            Alpine.store('adminActions', {
                 loading: false,
                 
                 async toggleBan(userId, currentStatus) {
                     this.loading = true;
                     
                     try {
-                        const response = await fetch(`/api/v1/admin/users/${userId}/ban`, {
+                        const response = await fetch(`/admin/users/${userId}/ban`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -60,7 +60,7 @@
                     this.loading = true;
                     
                     try {
-                        const response = await fetch(`/api/v1/admin/users/${userId}/role`, {
+                        const response = await fetch(`/admin/users/${userId}/role`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -89,7 +89,7 @@
                     this.loading = true;
                     
                     try {
-                        const response = await fetch(`/api/v1/admin/${postType}-posts/${postId}/hide`, {
+                        const response = await fetch(`/admin/${postType}-posts/${postId}/hide`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -117,7 +117,7 @@
                     this.loading = true;
                     
                     try {
-                        const response = await fetch(`/api/v1/admin/${postType}-posts/${postId}/publish`, {
+                        const response = await fetch(`/admin/${postType}-posts/${postId}/publish`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -154,10 +154,10 @@
                         notification.remove();
                     }, 5000);
                 }
-            }));
+            });
             
             // Confirmation Modal Component
-            Alpine.data('confirmDelete', () => ({
+            Alpine.store('confirmDelete', {
                 showModal: false,
                 itemId: null,
                 itemType: '',
@@ -176,10 +176,25 @@
                 
                 async confirm() {
                     if (this.itemId) {
+                        // Determine the correct delete route based on current page
+                        let deleteUrl;
+                        const currentPath = window.location.pathname;
+                        
+                        if (currentPath.includes('/admin/feed-posts')) {
+                            deleteUrl = `/admin/feed-posts/${this.itemId}`;
+                        } else if (currentPath.includes('/admin/men-posts')) {
+                            deleteUrl = `/admin/men-posts/${this.itemId}`;
+                        } else if (currentPath.includes('/admin/users')) {
+                            deleteUrl = `/admin/users/${this.itemId}`;
+                        } else {
+                            // Fallback: try to construct URL from current path
+                            deleteUrl = `${currentPath}/${this.itemId}`;
+                        }
+                        
                         // Create a form and submit it for deletion
                         const form = document.createElement('form');
                         form.method = 'POST';
-                        form.action = window.location.href + '/' + this.itemId;
+                        form.action = deleteUrl;
                         
                         const methodField = document.createElement('input');
                         methodField.type = 'hidden';
@@ -198,7 +213,7 @@
                     }
                     this.close();
                 }
-            }));
+            });
             
             // Search and Filter Component
             Alpine.data('searchFilter', () => ({
@@ -253,7 +268,92 @@
         }
 
         function confirmDelete(itemId, itemType = 'item') {
-            Alpine.store('confirmDelete').open(itemId, itemType);
+            // Prevent any default behavior
+            event.preventDefault();
+            event.stopPropagation();
+            
+            // Show the modal using a simpler approach
+            const modal = document.getElementById('confirmDeleteModal');
+            const modalItemId = document.getElementById('modalItemId');
+            const modalItemType = document.getElementById('modalItemType');
+            const modalItemType2 = document.getElementById('modalItemType2');
+            
+            if (modal && modalItemId && modalItemType && modalItemType2) {
+                modalItemId.value = itemId;
+                modalItemType.textContent = itemType;
+                modalItemType2.textContent = itemType;
+                modal.style.display = 'block';
+                modal.classList.add('show');
+            }
+        }
+        
+        function closeModal() {
+            const modal = document.getElementById('confirmDeleteModal');
+            if (modal) {
+                modal.style.display = 'none';
+                modal.classList.remove('show');
+            }
+        }
+        
+        // Close modal when clicking outside of it
+        document.addEventListener('click', function(event) {
+            const modal = document.getElementById('confirmDeleteModal');
+            if (modal && modal.style.display === 'block' && event.target === modal) {
+                closeModal();
+            }
+        });
+        
+        // Close modal when pressing Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+        
+        function confirmDeleteAction() {
+            const modal = document.getElementById('confirmDeleteModal');
+            const modalItemId = document.getElementById('modalItemId');
+            
+            if (modal && modalItemId && modalItemId.value) {
+                const itemId = modalItemId.value;
+                
+                // Determine the correct delete route based on current page
+                let deleteUrl;
+                const currentPath = window.location.pathname;
+                
+                if (currentPath.includes('/admin/feed-posts')) {
+                    deleteUrl = `/admin/feed-posts/${itemId}`;
+                } else if (currentPath.includes('/admin/men-posts')) {
+                    deleteUrl = `/admin/men-posts/${itemId}`;
+                } else if (currentPath.includes('/admin/users')) {
+                    deleteUrl = `/admin/users/${itemId}`;
+                } else {
+                    // Fallback: try to construct URL from current path
+                    deleteUrl = `${currentPath}/${itemId}`;
+                }
+                
+                // Create a form and submit it for deletion
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = deleteUrl;
+                
+                const methodField = document.createElement('input');
+                methodField.type = 'hidden';
+                methodField.name = '_method';
+                methodField.value = 'DELETE';
+                
+                const tokenField = document.createElement('input');
+                tokenField.type = 'hidden';
+                tokenField.name = '_token';
+                tokenField.value = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                
+                form.appendChild(methodField);
+                form.appendChild(tokenField);
+                document.body.appendChild(form);
+                form.submit();
+            }
+            
+            closeModal();
         }
 
         function changeRole(userId, newRole) {
@@ -383,7 +483,12 @@
                          class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white dark:bg-gray-800 py-1 shadow-lg ring-1 ring-black ring-opacity-5">
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Your Profile</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Settings</a>
-                        <a href="{{ route('logout') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Sign out</a>
+                        <form method="POST" action="{{ route('logout') }}" class="block">
+                            @csrf
+                            <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                Sign out
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -409,6 +514,135 @@
     
     <!-- Notifications -->
     <div id="notifications" class="fixed top-4 right-4 z-50 space-y-2"></div>
+    
+    <!-- Confirmation Modal -->
+    <div id="confirmDeleteModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Delete <span id="modalItemType">item</span></h3>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this <span id="modalItemType2">item</span>? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="confirmDeleteAction()" class="btn btn-danger">Delete</button>
+                <button type="button" onclick="closeModal()" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Hidden input to store item ID -->
+    <input type="hidden" id="modalItemId" value="">
+    
+    <style>
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.show {
+            opacity: 1;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            padding: 0;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+        
+        .modal-header {
+            padding: 20px 24px 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .modal-body {
+            padding: 16px 24px;
+        }
+        
+        .modal-body p {
+            margin: 0;
+            color: #6b7280;
+        }
+        
+        .modal-footer {
+            padding: 16px 24px 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-danger {
+            background-color: #dc2626;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #b91c1c;
+        }
+        
+        .btn-secondary {
+            background-color: #6b7280;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #4b5563;
+        }
+        
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .modal-content {
+                background: #1f2937;
+            }
+            
+            .modal-header {
+                border-bottom-color: #374151;
+            }
+            
+            .modal-header h3 {
+                color: #f9fafb;
+            }
+            
+            .modal-body p {
+                color: #d1d5db;
+            }
+        }
+    </style>
     
     <!-- Additional Scripts -->
     @stack('scripts')

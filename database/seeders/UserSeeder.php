@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
                 'password' => bcrypt('19112002'),
                 'role' => 'admin',
                 'status' => 'active',
-                'avatar' => 'https://via.placeholder.com/150/0000FF/FFFFFF?text=A',
+                'avatar' => null, // Use default avatar instead of external URL
             ],
             [
                 'name' => 'Admin User',
@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
                 'password' => bcrypt('password'),
                 'role' => 'admin',
                 'status' => 'active',
-                'avatar' => 'https://via.placeholder.com/150/0000FF/FFFFFF?text=A',
+                'avatar' => null, // Use default avatar instead of external URL
             ],
             [
                 'name' => 'Moderator User',
@@ -38,7 +38,7 @@ class UserSeeder extends Seeder
                 'password' => bcrypt('password'),
                 'role' => 'moderator',
                 'status' => 'active',
-                'avatar' => 'https://via.placeholder.com/150/00FF00/FFFFFF?text=M',
+                'avatar' => null, // Use default avatar instead of external URL
             ],
             [
                 'name' => 'Sarah Johnson',
@@ -47,7 +47,7 @@ class UserSeeder extends Seeder
                 'password' => bcrypt('password'),
                 'role' => 'user',
                 'status' => 'active',
-                'avatar' => 'https://via.placeholder.com/150/FF0000/FFFFFF?text=S',
+                'avatar' => null, // Use default avatar instead of external URL
             ],
             [
                 'name' => 'Mike Chen',
@@ -56,7 +56,7 @@ class UserSeeder extends Seeder
                 'password' => bcrypt('password'),
                 'role' => 'user',
                 'status' => 'active',
-                'avatar' => 'https://via.placeholder.com/150/FFFF00/000000?text=M',
+                'avatar' => null, // Use default avatar instead of external URL
             ],
             [
                 'name' => 'Emma Wilson',
@@ -65,7 +65,7 @@ class UserSeeder extends Seeder
                 'password' => bcrypt('password'),
                 'role' => 'user',
                 'status' => 'active',
-                'avatar' => 'https://via.placeholder.com/150/FF00FF/FFFFFF?text=E',
+                'avatar' => null, // Use default avatar instead of external URL
             ],
             [
                 'name' => 'Alex Rodriguez',
@@ -74,7 +74,7 @@ class UserSeeder extends Seeder
                 'password' => bcrypt('password'),
                 'role' => 'user',
                 'status' => 'active',
-                'avatar' => 'https://via.placeholder.com/150/00FFFF/000000?text=A',
+                'avatar' => null, // Use default avatar instead of external URL
             ],
             [
                 'name' => 'Lisa Brown',
@@ -83,7 +83,7 @@ class UserSeeder extends Seeder
                 'password' => bcrypt('password'),
                 'role' => 'user',
                 'status' => 'active',
-                'avatar' => 'https://via.placeholder.com/150/800080/FFFFFF?text=L',
+                'avatar' => null, // Use default avatar instead of external URL
             ],
             [
                 'name' => 'David Kim',
@@ -92,7 +92,7 @@ class UserSeeder extends Seeder
                 'password' => bcrypt('password'),
                 'role' => 'user',
                 'status' => 'active',
-                'avatar' => 'https://via.placeholder.com/150/008000/FFFFFF?text=D',
+                'avatar' => null, // Use default avatar instead of external URL
             ],
             [
                 'name' => 'Jessica Taylor',
@@ -101,7 +101,7 @@ class UserSeeder extends Seeder
                 'password' => bcrypt('password'),
                 'role' => 'user',
                 'status' => 'active',
-                'avatar' => 'https://via.placeholder.com/150/FFA500/000000?text=J',
+                'avatar' => null, // Use default avatar instead of external URL
             ],
             [
                 'name' => 'Banned User',
@@ -110,7 +110,7 @@ class UserSeeder extends Seeder
                 'password' => bcrypt('password'),
                 'role' => 'user',
                 'status' => 'banned',
-                'avatar' => 'https://via.placeholder.com/150/FF0000/FFFFFF?text=B',
+                'avatar' => null, // Use default avatar instead of external URL
             ],
         ];
 
