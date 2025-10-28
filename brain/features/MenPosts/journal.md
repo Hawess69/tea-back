@@ -70,7 +70,39 @@
 - ✅ Use queue jobs for alert processing
 - ✅ Image blurring for privacy protection
 
+## 2025-10-28 - Image URL Bug Fix
+
+### 🐛 Issue Identified
+Images stored in incorrect directory and URLs not properly generated using the public disk.
+
+### 💻 Engineering Perspective
+**Problem:**
+- Images were being stored to `storage/app/private/public/posts/men/` instead of `storage/app/public/posts/men/`
+- `ImageService` was using `Storage::url()` without specifying the 'public' disk
+- Symbolic link from `public/storage` to `storage/app/public` was missing
+
+**Solution:**
+1. Created `storage/app/public/posts/men/` directory
+2. Moved existing images from incorrect location
+3. Ran `php artisan storage:link` to create symbolic link
+4. Fixed `ImageService` to use `Storage::disk('public')->url()` instead of `Storage::url()`
+
+**Files Modified:**
+- `app/Services/ImageService.php` (lines 38, 63, 83)
+- Created symbolic link: `public/storage` → `storage/app/public`
+
+**Result:**
+- Images now correctly stored in `storage/app/public/posts/men/`
+- URLs now properly formatted: `http://localhost:8000/storage/posts/men/filename.jpg`
+- Images accessible via `CachedNetworkImage` in Flutter
+
+### 🧪 QA Perspective
+- ✅ Verified symbolic link created
+- ✅ Confirmed images accessible via browser
+- ✅ URL format matches expected pattern
+- ✅ Flutter app can now load images correctly
+
 ---
-*Last Updated: 2025-01-27*
+*Last Updated: 2025-10-28*
 
 
