@@ -15,6 +15,38 @@
 
 **Image Upload Content-Type**: `multipart/form-data` (for image uploads)
 
+### 📸 **Image URL Format**
+
+All images returned by the API follow this format:
+
+**Development:**
+```
+http://localhost:8000/storage/posts/{type}/{filename}
+http://localhost:8000/storage/avatars/{filename}
+http://localhost:8000/storage/events/{filename}
+```
+
+**Production:**
+```
+https://your-production-url.com/storage/posts/{type}/{filename}
+```
+
+**Example URLs:**
+- Men Post Image: `http://localhost:8000/storage/posts/men/0_1761614498.jpg`
+- Feed Post Image: `http://localhost:8000/storage/posts/feed/1_1761614498.jpg`
+- User Avatar: `http://localhost:8000/storage/avatars/123_1761614498.jpg`
+
+**Flutter Usage with CachedNetworkImage:**
+```dart
+CachedNetworkImage(
+  imageUrl: post.photoUrl,  // Direct URL from API
+  placeholder: (context, url) => CircularProgressIndicator(),
+  errorWidget: (context, url, error) => Icon(Icons.error),
+)
+```
+
+> **Important:** Ensure the Laravel server has run `php artisan storage:link` to create the symbolic link from `public/storage` to `storage/app/public`.
+
 ---
 
 ## 🔐 **Authentication**

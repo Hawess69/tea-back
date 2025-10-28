@@ -35,7 +35,7 @@ final class ImageService
         // Process image (resize, optimize)
         $this->processAvatar($path);
         
-        return Storage::url($filename);
+        return Storage::disk('public')->url($filename);
     }
 
     /**
@@ -60,7 +60,7 @@ final class ImageService
             $this->processFeedPostImage($path);
         }
         
-        return Storage::url($filename);
+        return Storage::disk('public')->url($filename);
     }
 
     /**
@@ -80,7 +80,7 @@ final class ImageService
         // Process image (resize, optimize)
         $this->processEventImage($path);
         
-        return Storage::url($filename);
+        return Storage::disk('public')->url($filename);
     }
 
     /**
